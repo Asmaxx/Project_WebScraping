@@ -1,62 +1,29 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Mar 31 11:58:56 2022
+
+@author: djiko
+"""
+
 import pandas as pd
-import requests
+from Liste_Transfert import *
+import time
+df = pd.read_csv("C:/Users/djiko/Documents/ESME/Ingé2/Web Scraping/Projet/test.csv",sep=",")
+            
+df_player = pd.DataFrame()
 
-page = requests.get("")
+print(df.dtypes)
+print(df.head())
+i=0
+for index, row in df.iterrows():
+    print(row["Lien_URL_Club"])
+    dict_players=getListTransfert(row["Lien_URL_Club"], row["Saison"])
+    for key, value in dict_players.items():
+        try:
+          df_player = df_player.append(value, ignore_index=True)
+        except:
+          print("An exception occurred")
+          print(key)
 
-from bs4 import BeautifulSoup
-
-soup = BeautifulSoup(page.text, 'lxml')
-
-#====================================================
-# CSV METHOD
-#====================================================
-
-import csv
-
-#Création du CSV
-csvFile = open("name.csv", "w", newline='', encoding="utf-8")
-csvWriter = csv.writer(csvFile,delimiter=';', quotechar='"')
-
-#Création du nom des collones 
-csvWriter.writerow(['Row1','Row2'])
-
-#Ecriture dans le fichier CSV
-#In for loop
-csvWriter.writerow((row_data))
-
-#Fermeture et enregistrement du CSV
-csvFile.close()
-
-#====================================================
-# DATAFRAME TO CSV METHOD
-#====================================================
-
-d = []
-
-d.append({'row1': data1, 'row2': data2})
-
-df = pd.DataFrame(d)
-
-df.to_csv('C:\.csv', 'w')
-
-#====================================================
-# JSON METHOD
-#====================================================
-
-#Dictionary
-dict = {}
-
-#Creating the JSON file
-import json
-
-with open(r'C:\.json', 'w', encoding='utf-8') as file:
-    json.dump(dict, file, ensure_ascii = False, indent=0)
-    
-lire = open(r'C:\.json', 'r', encoding='utf-8')
-fichier = lire.read()
-list = json.loads(fichier)
-
-#====================================================
-# SOURCES
-#====================================================
-
+        
+df_player.to_csv('liste_transfert.csv')    
